@@ -63,13 +63,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         throw new Error('Invalid response from server');
       }
 
+      // Only update state if we have valid data
       setAuthState({
         token: data.token,
         user: data.user,
         merchant: data.merchant
       });
     } catch (error: any) {
-      // Prevent the error from causing a page reload
+      // Don't update any state if there's an error
       if (error.response?.status === 401) {
         throw new Error('Invalid email or password');
       }

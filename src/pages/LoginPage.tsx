@@ -11,8 +11,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // Prevent default form submission
-    e.stopPropagation(); // Stop event propagation
+    e.preventDefault();
+    e.stopPropagation();
     
     if (isLoading) return;
     
@@ -21,11 +21,15 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      navigate('/', { replace: true }); // Use replace to prevent back navigation to login
+      // Only navigate on successful login
+      navigate('/', { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-    } finally {
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      // Keep form enabled when there's an error
       setIsLoading(false);
+      // Return early to prevent any navigation
+      return;
     }
   };
 
