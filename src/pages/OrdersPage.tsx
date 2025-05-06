@@ -30,7 +30,7 @@ const OrdersPage = () => {
   const updatePaymentStatus = useMutation({
     mutationFn: ({ orderId }: { orderId: string }) =>
       api.updateOrderPaymentStatus(orderId, 'PAID'),
-    onSuccess: (_, { orderId }) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['merchant-orders'] });
     },
   });
