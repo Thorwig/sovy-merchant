@@ -34,7 +34,7 @@ const LoginPage = () => {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -44,6 +44,7 @@ const LoginPage = () => {
                 id="email"
                 name="email"
                 type="email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -59,6 +60,7 @@ const LoginPage = () => {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
