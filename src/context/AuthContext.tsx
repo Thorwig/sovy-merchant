@@ -42,11 +42,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   useEffect(() => {
-    localStorage.setItem('auth', JSON.stringify(authState));
-    
     if (authState.token) {
+      localStorage.setItem('auth', JSON.stringify(authState));
       axios.defaults.headers.common['Authorization'] = `Bearer ${authState.token}`;
     } else {
+      localStorage.removeItem('auth');
       delete axios.defaults.headers.common['Authorization'];
     }
   }, [authState]);
@@ -59,19 +59,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role: 'MERCHANT'
       });
 
+      if (!data.token || !data.user || !data.merchant) {
+        throw new Error('Invalid response from server');
+      }
+
       setAuthState({
         token: data.token,
         user: data.user,
         merchant: data.merchant
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error.response?.data?.message) {
+        throw new Error(error.response.data.message);
+      }
       throw new Error('Login failed. Please check your credentials.');
     }
   };
 
   const logout = () => {
     setAuthState({ token: null, user: null, merchant: null });
-    localStorage.removeItem('auth');
   };
 
   const updateMerchantProfile = async (data: Partial<Merchant>) => {
