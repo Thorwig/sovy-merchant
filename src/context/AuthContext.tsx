@@ -69,6 +69,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         merchant: data.merchant
       });
     } catch (error: any) {
+      // Prevent the error from causing a page reload
+      if (error.response?.status === 401) {
+        throw new Error('Invalid email or password');
+      }
       if (error.response?.data?.message) {
         throw new Error(error.response.data.message);
       }

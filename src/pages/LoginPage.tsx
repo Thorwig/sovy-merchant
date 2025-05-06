@@ -11,7 +11,9 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault(); // Prevent default form submission
+    e.stopPropagation(); // Stop event propagation
+    
     if (isLoading) return;
     
     setError('');
@@ -19,9 +21,10 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
-      navigate('/');
+      navigate('/', { replace: true }); // Use replace to prevent back navigation to login
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+    } finally {
       setIsLoading(false);
     }
   };
@@ -35,7 +38,12 @@ const LoginPage = () => {
           </h2>
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
+        <form 
+          className="mt-8 space-y-6" 
+          onSubmit={handleSubmit} 
+          noValidate
+          autoComplete="off"
+        >
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -74,7 +82,10 @@ const LoginPage = () => {
           </div>
 
           {error && (
-            <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+            <div 
+              className="rounded-md bg-destructive/15 p-3 text-sm text-destructive"
+              role="alert"
+            >
               {error}
             </div>
           )}
