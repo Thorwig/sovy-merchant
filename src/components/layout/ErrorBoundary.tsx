@@ -1,8 +1,9 @@
 import React from 'react';
+import { withTranslation, WithTranslation } from 'react-i18next';
 import { Button } from '../../components/ui/button';
 import { AlertTriangle } from 'lucide-react';
 
-interface Props {
+interface Props extends WithTranslation {
   children: React.ReactNode;
 }
 
@@ -11,7 +12,7 @@ interface State {
   error: Error | null;
 }
 
-export class ErrorBoundary extends React.Component<Props, State> {
+class ErrorBoundaryComponent extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { hasError: false, error: null };
@@ -30,15 +31,17 @@ export class ErrorBoundary extends React.Component<Props, State> {
   };
 
   render() {
+    const { t } = this.props;
+
     if (this.state.hasError) {
       return (
         <div className="min-h-[400px] flex flex-col items-center justify-center p-6 text-center">
           <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
-          <h2 className="text-lg font-semibold mb-2">Something went wrong</h2>
+          <h2 className="text-lg font-semibold mb-2">{t('common.errorBoundary.title')}</h2>
           <p className="text-sm text-muted-foreground mb-4 max-w-md">
-            {this.state.error?.message || 'An unexpected error occurred'}
+            {this.state.error?.message || t('common.errorBoundary.message')}
           </p>
-          <Button onClick={this.handleRetry}>Try again</Button>
+          <Button onClick={this.handleRetry}>{t('common.errorBoundary.action')}</Button>
         </div>
       );
     }
@@ -46,3 +49,5 @@ export class ErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
+
+export const ErrorBoundary = withTranslation()(ErrorBoundaryComponent);

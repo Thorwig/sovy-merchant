@@ -53,7 +53,31 @@
     "image": "Image",
     "uploadImage": "Télécharger une image",
     "changeImage": "Changer l'image",
-    "off": "de réduction"
+    "off": "de réduction",
+    "modal": {
+      "addTitle": "Ajouter un article",
+      "editTitle": "Modifier l'article",
+      "namePlaceholder": "ex. : Sandwich au poulet",
+      "descriptionPlaceholder": "Décrivez votre article...",
+      "priceLabel": "Prix original",
+      "pricePlaceholder": "Entrez le prix original",
+      "discountLabel": "Pourcentage de réduction",
+      "priceWithDiscount": "Prix avec réduction",
+      "quantityLabel": "Quantité disponible",
+      "expiryDateLabel": "Date d'expiration",
+      "imageDropzone": "Déposez votre image ici ou cliquez pour parcourir",
+      "changeImage": "Changer l'image",
+      "saving": "Enregistrement...",
+      "saved": "Enregistré avec succès",
+      "discount": "Réduction",
+      "error": {
+        "general": "Échec de l'enregistrement de l'article",
+        "required": "Ce champ est requis",
+        "price": "Le prix doit être supérieur à 0",
+        "quantity": "La quantité doit être d'au moins 0",
+        "date": "La date d'expiration doit être dans le futur"
+      }
+    }
   },
   "nav": {
     "dashboard": "Tableau de bord",
@@ -74,6 +98,32 @@
     "date": "Date de commande",
     "status": "Statut",
     "totalAmount": "Montant total"
+  },
+  "profile": {
+    "title": "Profil",
+    "edit": "Modifier le profil",
+    "businessName": "Nom de l'entreprise",
+    "email": "Adresse e-mail",
+    "contact": "Contact",
+    "location": "Emplacement",
+    "area": "Zone",
+    "about": "À propos de nous",
+    "noDescription": "Aucune description fournie",
+    "editProfile": "Modifier le profil",
+    "editTitle": "Modifier le profil",
+    "phone": "Numéro de téléphone",
+    "phoneFormat": "Format : +212 6 12 34 56 78",
+    "description": "Description",
+    "descriptionPlaceholder": "Entrez une description de votre entreprise",
+    "address": "Adresse",
+    "addressPlaceholder": "Entrez l'adresse de votre entreprise",
+    "city": "Ville",
+    "cityPlaceholder": "Entrez la ville de votre entreprise",
+    "postalCode": "Code postal",
+    "postalCodePlaceholder": "Entrez le code postal de votre entreprise",
+    "country": "Pays",
+    "countryPlaceholder": "Sélectionnez le pays de votre entreprise",
+    "saveChanges": "Enregistrer les modifications",
+    "changesSaved": "Modifications enregistrées avec succès"
   }
-  
 }

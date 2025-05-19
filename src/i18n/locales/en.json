@@ -10,8 +10,12 @@
     "update": "Update",
     "submit": "Submit",
     "currency": "MAD",
-    "next": "Next",
-    "previous": "Previous"
+    "tryAgain": "Try again",
+    "errorBoundary": {
+      "title": "Something went wrong",
+      "message": "An unexpected error occurred. Please try again.",
+      "action": "Try again"
+    }
   },
   "auth": {
     "login": "Login",
@@ -56,24 +60,29 @@
     "uploadImage": "Upload Image",
     "changeImage": "Change Image",
     "off": "off",
-    "noItems": "No food items",
-    "noItemsMessage": "Get started by creating a new food item",
-    "deleteConfirm": "Are you sure you want to delete this item?",
-    "deleteError": "Failed to delete food item. Please try again.",
-    "form": {
+    "modal": {
+      "addTitle": "Add New Food Item",
+      "editTitle": "Edit Food Item",
       "namePlaceholder": "e.g., Chicken Sandwich",
-      "nameLabel": "Name",
-      "descriptionLabel": "Description",
-      "priceLabel": "Price",
-      "originalPriceLabel": "Original Price",
-      "discountLabel": "Discount",
-      "quantityLabel": "Quantity",
+      "descriptionPlaceholder": "Describe your food item...",
+      "priceLabel": "Original Price",
+      "pricePlaceholder": "Enter original price",
+      "discountLabel": "Discount Percentage",
+      "priceWithDiscount": "Price with discount",
+      "quantityLabel": "Available Quantity",
       "expiryDateLabel": "Expiry Date",
-      "imageLabel": "Image",
+      "imageDropzone": "Drop your image here or click to browse",
+      "changeImage": "Change Image",
       "saving": "Saving...",
-      "create": "Create",
-      "update": "Update",
-      "error": "Failed to save food item"
+      "saved": "Saved successfully",
+      "discount": "Discount",
+      "error": {
+        "general": "Failed to save food item",
+        "required": "This field is required",
+        "price": "Price must be greater than 0",
+        "quantity": "Quantity must be at least 0",
+        "date": "Expiry date must be in the future"
+      }
     }
   },
   "nav": {
@@ -85,30 +94,43 @@
   },
   "orders": {
     "title": "Orders",
-    "total": "Total",
     "orderId": "Order ID",
-    "date": "Date",
+    "customerName": "Customer Name",
     "items": "Items",
-    "allStatus": "All Status",
-    "page": "{{current}} of {{total}}",
-    "status": {
-      "title": "Status",
-      "pending": "Pending",
-      "confirmed": "Confirmed",
-      "picked_up": "Picked Up",
-      "cancelled": "Cancelled"
-    },
-    "payment": {
-      "title": "Payment",
-      "pending": "Pending",
-      "paid": "Paid"
-    },
-    "actions": {
-      "title": "Actions",
-      "confirm": "Confirm",
-      "pickup": "Mark as Picked Up",
-      "cancel": "Cancel",
-      "markPaid": "Mark as Paid"
-    }
+    "total": "Total",
+    "status": "Status",
+    "status.title": "Status",
+    "payment.title": "Payment Method",
+    "actions.title": "Actions",
+    "date": "Date",
+    "details": "Details",
+    "noOrders": "No orders found"
+  },
+  "profile": {
+    "title": "Profile",
+    "edit": "Edit Profile",
+    "businessName": "Business Name",
+    "email": "Email Address",
+    "contact": "Contact",
+    "location": "Location",
+    "area": "Area",
+    "about": "About Us",
+    "noDescription": "No description provided",
+    "editProfile": "Edit Profile",
+    "editTitle": "Edit Profile",
+    "phone": "Phone Number",
+    "phoneFormat": "Format: +212 6 12 34 56 78",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter a description of your business",
+    "address": "Address",
+    "addressPlaceholder": "Enter your business address",
+    "city": "City",
+    "cityPlaceholder": "Enter your business city",
+    "postalCode": "Postal Code",
+    "postalCodePlaceholder": "Enter your business postal code",
+    "country": "Country",
+    "countryPlaceholder": "Select your business country",
+    "saveChanges": "Save Changes",
+    "changesSaved": "Changes saved successfully"
   }
 }

@@ -53,7 +53,31 @@
     "image": "الصورة",
     "uploadImage": "رفع صورة",
     "changeImage": "تغيير الصورة",
-    "off": "خصم"
+    "off": "خصم",
+    "modal": {
+      "addTitle": "إضافة منتج غذائي",
+      "editTitle": "تعديل منتج غذائي",
+      "namePlaceholder": "مثل، ساندويتش دجاج",
+      "descriptionPlaceholder": "صف منتجك الغذائي...",
+      "priceLabel": "السعر الأصلي",
+      "pricePlaceholder": "أدخل السعر الأصلي",
+      "discountLabel": "نسبة الخصم",
+      "priceWithDiscount": "السعر بعد الخصم",
+      "quantityLabel": "الكمية المتاحة",
+      "expiryDateLabel": "تاريخ الانتهاء",
+      "imageDropzone": "اسحب الصورة هنا أو انقر لتصفح",
+      "changeImage": "تغيير الصورة",
+      "saving": "جاري الحفظ...",
+      "saved": "تم الحفظ بنجاح",
+      "discount": "خصم",
+      "error": {
+        "general": "فشل حفظ المنتج الغذائي",
+        "required": "هذا الحقل مطلوب",
+        "price": "يجب أن يكون السعر أكبر من 0",
+        "quantity": "يجب أن تكون الكمية على الأقل 0",
+        "date": "يجب أن يكون تاريخ الانتهاء في المستقبل"
+      }
+    }
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -76,5 +100,32 @@
     "date": "التاريخ",
     "totalAmount": "المبلغ الإجمالي",
     "viewDetails": "عرض التفاصيل"
+  },
+  "profile": {
+    "title": "الملف الشخصي",
+    "businessName": "اسم العمل",
+    "email": "البريد الإلكتروني",
+    "contact": "جهة الاتصال",
+    "location": "الموقع",
+    "area": "المنطقة",
+    "about": "نبذة عنا",
+    "noDescription": "لا توجد معلومات متاحة",
+    "editProfile": "تعديل الملف الشخصي",
+    "editTitle": "تعديل الملف الشخصي",
+    "phone": "رقم الهاتف",
+    "phoneFormat": "التنسيق: +212 6 12 34 56 78",
+    "description": "الوصف",
+    "descriptionPlaceholder": "أدخل وصف عملك",
+    "address": "العنوان",
+    "addressPlaceholder": "أدخل عنوان عملك",
+    "city": "المدينة",
+    "cityPlaceholder": "أدخل مدينة عملك",
+    "postalCode": "الرمز البريدي",
+    "postalCodePlaceholder": "أدخل الرمز البريدي لعملك",
+    "country": "البلد",
+    "countryPlaceholder": "اختر بلد عملك",
+    "saveChanges": "حفظ التغييرات",
+    "changesSaved": "تم حفظ التغييرات بنجاح",
+    "edit": "تعديل"
   }
 }

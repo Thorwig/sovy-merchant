@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload, Image as ImageIcon, MinusCircle, PlusCircle } from 'lucide-react';
 import { api } from '../../services/api';
@@ -32,6 +33,7 @@ interface FoodItemModalProps {
 }
 
 const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [form, setForm] = useState<FoodItemFormData>({
     name: foodItem?.name || '',
@@ -72,14 +74,34 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Check file type
+    if (!file.type.startsWith('image/')) {
+      setError(t('foodItems.modal.error.invalidImageType'));
+      return;
     }
+
+    // Check file size (5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+    if (file.size > maxSize) {
+      setError(t('foodItems.modal.error.imageTooLarge'));
+      return;
+    }
+
+    // Clear any previous errors
+    setError('');
+    
+    // Update form state
+    setImage(file);
+    setForm(prev => ({ ...prev, image: file }));
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreviewUrl(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -108,7 +130,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
       await queryClient.invalidateQueries({ queryKey: ['merchant-food-items'] });
       onSuccess();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save food item');
+      setError(err instanceof Error ? err.message : t('foodItems.modal.error.general'));
     } finally {
       setIsSubmitting(false);
     }
@@ -126,7 +148,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
         >
           <div className="flex items-center justify-between border-b p-4">
             <h2 className="text-lg font-semibold">
-              {foodItem ? 'Edit Food Item' : 'Add New Food Item'}
+              {foodItem ? t('foodItems.modal.editTitle') : t('foodItems.modal.addTitle')}
             </h2>
             <button
               onClick={onClose}
@@ -141,45 +163,48 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
             className="max-h-[calc(100vh-10rem)] space-y-4 overflow-y-auto p-4"
           >
             {/* Image Upload */}
-            <div className="group relative aspect-[16/9] overflow-hidden rounded-lg border-2 border-dashed bg-secondary/20">
+            <div className="group relative aspect-[16/9] overflow-hidden rounded-lg border-2 border-dashed bg-secondary/20 hover:border-primary/50 transition-colors">
               {(previewUrl || foodItem?.imageUrl) ? (
-                <img
-                  src={previewUrl || foodItem?.imageUrl}
-                  alt="Preview"
-                  className="h-full w-full object-cover"
-                  onError={(e) => {
-                    const target = e.currentTarget;
-                    target.onerror = null;
-                    target.src = defaultLogo;
-                  }}
-                />
+                <div className="relative h-full">
+                  <img
+                    src={previewUrl || foodItem?.imageUrl}
+                    alt={t('foodItems.modal.imagePreview')}
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      const target = e.currentTarget;
+                      target.onerror = null;
+                      target.src = defaultLogo;
+                    }}
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+                    <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
+                      <Upload className="h-4 w-4" />
+                      {t('foodItems.modal.changeImage')}
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div className="flex h-full flex-col items-center justify-center text-center">
-                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
-                  <p className="mt-2 text-sm font-medium">
-                    Click or drag image to upload
+                <div className="flex h-full flex-col items-center justify-center text-center p-4">
+                  <ImageIcon className="h-8 w-8 text-muted-foreground mb-2" />
+                  <p className="text-sm font-medium">
+                    {t('foodItems.modal.imageDropzone')}
                   </p>
-                  <p className="text-xs text-muted-foreground">
-                    PNG, JPG up to 5MB
+                  <p className="text-xs text-muted-foreground mt-1">
+                    PNG, JPG {t('foodItems.modal.upTo')} 5MB
                   </p>
                 </div>
               )}
               <input
                 type="file"
-                accept="image/*"
+                accept="image/png,image/jpeg,image/jpg"
                 onChange={handleImageChange}
                 className="absolute inset-0 cursor-pointer opacity-0"
+                aria-label={t('foodItems.modal.uploadImage')}
               />
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
-                <div className="flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-black">
-                  <Upload className="h-4 w-4" />
-                  Change Image
-                </div>
-              </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Name</label>
+              <label className="text-sm font-medium">{t('foodItems.name')}</label>
               <input
                 type="text"
                 value={form.name}
@@ -188,12 +213,12 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                 }
                 required
                 className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                placeholder="e.g., Chicken Sandwich"
+                placeholder={t('foodItems.modal.namePlaceholder')}
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">{t('foodItems.description')}</label>
               <textarea
                 value={form.description}
                 onChange={(e) =>
@@ -201,17 +226,16 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                 }
                 rows={3}
                 className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                placeholder="Brief description of the food item..."
+                placeholder={t('foodItems.modal.descriptionPlaceholder')}
               />
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Original Price (MAD)</label>
-                <div className="relative">
+                <label className="text-sm font-medium">{t('foodItems.modal.priceLabel')}</label>
+                <div className="relative flex items-center">
                   <input
                     type="number"
-                    step="0.5"
                     min="0"
                     value={form.originalPrice}
                     onChange={(e) =>
@@ -221,17 +245,17 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                       }))
                     }
                     required
-                    className="w-full rounded-md border bg-background pl-8 pr-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    placeholder="0.00"
+                    className="w-full rounded-md border bg-background pl-8 pr-16 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    placeholder={t('foodItems.modal.pricePlaceholder')}
                   />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    د.م
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">
+                    MAD
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Discount</label>
+                <label className="text-sm font-medium">{t('foodItems.modal.discountLabel')}</label>
                 <div className="flex items-center gap-2">
                   <div className="relative flex-1">
                     <input
@@ -241,7 +265,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                       className="w-full rounded-md border bg-muted px-3 py-2 text-muted-foreground"
                     />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
-                      ({form.discountPercentage}% off)
+                      ({form.discountPercentage}% {t('foodItems.off')})
                     </span>
                   </div>
                 </div>
@@ -251,7 +275,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                     onClick={() => handleDiscountChange(false)}
                     disabled={form.discountPercentage <= 50}
                     className="rounded-md p-1.5 text-foreground hover:bg-secondary disabled:text-muted-foreground disabled:hover:bg-transparent"
-                    aria-label="Decrease discount"
+                    aria-label={t('foodItems.modal.decreaseDiscount')}
                   >
                     <MinusCircle className="h-5 w-5" />
                   </button>
@@ -260,7 +284,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                       {form.discountPercentage}%
                     </span>
                     <span className="text-xs text-muted-foreground">
-                      Discount
+                      {t('foodItems.modal.discount')}
                     </span>
                   </div>
                   <button
@@ -268,7 +292,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                     onClick={() => handleDiscountChange(true)}
                     disabled={form.discountPercentage >= 70}
                     className="rounded-md p-1.5 text-foreground hover:bg-secondary disabled:text-muted-foreground disabled:hover:bg-transparent"
-                    aria-label="Increase discount"
+                    aria-label={t('foodItems.modal.increaseDiscount')}
                   >
                     <PlusCircle className="h-5 w-5" />
                   </button>
@@ -276,7 +300,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Quantity</label>
+                <label className="text-sm font-medium">{t('foodItems.modal.quantityLabel')}</label>
                 <input
                   type="number"
                   min="0"
@@ -293,7 +317,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Expiry Date</label>
+                <label className="text-sm font-medium">{t('foodItems.modal.expiryDateLabel')}</label>
                 <input
                   type="date"
                   value={form.expiryDate}
@@ -318,14 +342,14 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                 onClick={onClose}
                 className="rounded-md px-4 py-2 text-sm font-medium hover:bg-secondary"
               >
-                Cancel
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
                 className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? 'Saving...' : foodItem ? 'Update' : 'Create'}
+                {isSubmitting ? t('foodItems.modal.saving') : foodItem ? t('common.update') : t('common.create')}
               </button>
             </div>
           </form>
