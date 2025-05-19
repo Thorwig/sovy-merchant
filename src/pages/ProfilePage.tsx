@@ -3,7 +3,6 @@ import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, MapPin, Phone, Save, ShieldCheck, X } from 'lucide-react';
 import { z } from 'zod';
-import defaultLogo from '../assets/logo.png';
 
 const profileSchema = z.object({
   businessName: z.string().min(2, 'Business name must be at least 2 characters'),
