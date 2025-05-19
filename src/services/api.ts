@@ -62,6 +62,7 @@ export interface Order {
   paymentStatus: 'PENDING' | 'PAID';
   pickupTime: string;
   items: OrderItem[];
+  totalAmount: number;
   createdAt: string;
   updatedAt: string;
 }

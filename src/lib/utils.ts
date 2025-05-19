@@ -8,8 +8,8 @@ export function cn(...inputs: (string | undefined | null | boolean)[]): string {
 }
 
 // Format currency
-export function formatCurrency(amount: number, currency: string = 'USD'): string {
-    return new Intl.NumberFormat('en-US', {
+export function formatCurrency(amount: number, currency: string = 'MAD'): string {
+    return new Intl.NumberFormat('fr-MA', {
         style: 'currency',
         currency,
     }).format(amount);
