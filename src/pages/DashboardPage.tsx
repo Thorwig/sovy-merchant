@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import {
   BarChart3,
   Clock,
@@ -117,6 +118,7 @@ const sampleHourlyOrdersData = [
 ];
 
 const DashboardPage: React.FC = () => {
+  const { t } = useTranslation();
   const { data: stats, isLoading } = useQuery<MerchantStats>({
     queryKey: ['merchant-stats'],
     queryFn: api.getMerchantStats,
@@ -124,28 +126,28 @@ const DashboardPage: React.FC = () => {
 
   const statCards = [
     {
-      title: 'Total Orders',
+      title: t('dashboard.totalOrders'),
       value: stats?.totalOrders ?? 0,
       icon: ShoppingBag,
       color: 'blue-500',
       trend: 12.5,
     },
     {
-      title: 'Total Revenue',
+      title: t('dashboard.revenue'),
       value: formatCurrency(stats?.revenue ?? 0),
       icon: DollarSign,
       color: 'green-500',
       trend: 8.2,
     },
     {
-      title: 'Items Saved',
+      title: t('dashboard.itemsSaved'),
       value: stats?.itemsSaved ?? 0,
       icon: Package,
       color: 'purple-500',
       trend: 15.8,
     },
     {
-      title: 'Active Items',
+      title: t('dashboard.activeItems'),
       value: stats?.totalFoodItems ?? 0,
       icon: LayoutDashboard,
       color: 'orange-500',
@@ -160,9 +162,9 @@ const DashboardPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('dashboard.title')}</h1>
         <p className="text-muted-foreground">
-          Welcome back! Here's an overview of your business.
+          {t('dashboard.overview')}
         </p>
       </div>
 
@@ -190,10 +192,10 @@ const DashboardPage: React.FC = () => {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-muted-foreground" />
-                <h2 className="font-semibold">Daily Orders</h2>
+                <h2 className="font-semibold">{t('dashboard.dailyOrders')}</h2>
               </div>
               <p className="text-sm text-muted-foreground">
-                Overview of orders for the past week
+                {t('dashboard.weekOverview')}
               </p>
             </div>
           </div>
@@ -230,10 +232,10 @@ const DashboardPage: React.FC = () => {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <Clock className="h-5 w-5 text-muted-foreground" />
-                <h2 className="font-semibold">Today's Orders</h2>
+                <h2 className="font-semibold">{t('dashboard.todayOrders')}</h2>
               </div>
               <p className="text-sm text-muted-foreground">
-                Hourly order distribution
+                {t('dashboard.hourlyOrders')}
               </p>
             </div>
           </div>

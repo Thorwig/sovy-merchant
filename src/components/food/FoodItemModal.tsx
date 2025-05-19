@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Upload, Image as ImageIcon } from 'lucide-react';
+import { X, Upload, Image as ImageIcon, MinusCircle, PlusCircle } from 'lucide-react';
 import { api } from '../../services/api';
-import { formatDate } from '../../utils/formatters';
+import { formatDate, formatCurrency } from '../../utils/formatters';
 import defaultLogo from '../../assets/logo.png';
 
 interface FoodItemFormData {
   name: string;
   description: string;
-  price: number;
   originalPrice: number;
+  discountPercentage: number;
   quantity: number;
   expiryDate: string;
   image?: File;
@@ -36,8 +36,10 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
   const [form, setForm] = useState<FoodItemFormData>({
     name: foodItem?.name || '',
     description: foodItem?.description || '',
-    price: foodItem?.price || 0,
     originalPrice: foodItem?.originalPrice || 0,
+    discountPercentage: foodItem
+      ? Math.round(((foodItem.originalPrice - foodItem.price) / foodItem.originalPrice) * 100 / 5) * 5
+      : 50, // Default 50% discount
     quantity: foodItem?.quantity || 0,
     expiryDate: foodItem?.expiryDate
       ? formatDate(foodItem.expiryDate)
@@ -47,6 +49,26 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+
+  // Round to nearest .50
+  const roundToHalf = (num: number) => Math.round(num * 2) / 2;
+
+  // Calculate the discounted price based on original price and discount percentage
+  const calculatedPrice = useMemo(() => {
+    const discount = form.discountPercentage / 100;
+    const discounted = form.originalPrice * (1 - discount);
+    return roundToHalf(discounted);
+  }, [form.originalPrice, form.discountPercentage]);
+
+  const handleDiscountChange = (increment: boolean) => {
+    setForm((prev) => ({
+      ...prev,
+      discountPercentage: Math.min(
+        Math.max(prev.discountPercentage + (increment ? 5 : -5), 50), // Minimum 50%
+        70 // Maximum 70%
+      ),
+    }));
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -69,7 +91,7 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
       const formData = new FormData();
       formData.append('name', form.name);
       formData.append('description', form.description);
-      formData.append('price', form.price.toString());
+      formData.append('price', calculatedPrice.toString());
       formData.append('originalPrice', form.originalPrice.toString());
       formData.append('quantity', form.quantity.toString());
       formData.append('expiryDate', new Date(form.expiryDate).toISOString());
@@ -114,7 +136,10 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
             </button>
           </div>
 
-          <form onSubmit={handleSubmit} className="max-h-[calc(100vh-10rem)] space-y-4 overflow-y-auto p-4">
+          <form
+            onSubmit={handleSubmit}
+            className="max-h-[calc(100vh-10rem)] space-y-4 overflow-y-auto p-4"
+          >
             {/* Image Upload */}
             <div className="group relative aspect-[16/9] overflow-hidden rounded-lg border-2 border-dashed bg-secondary/20">
               {(previewUrl || foodItem?.imageUrl) ? (
@@ -131,8 +156,12 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
               ) : (
                 <div className="flex h-full flex-col items-center justify-center text-center">
                   <ImageIcon className="h-8 w-8 text-muted-foreground" />
-                  <p className="mt-2 text-sm font-medium">Click or drag image to upload</p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG up to 5MB</p>
+                  <p className="mt-2 text-sm font-medium">
+                    Click or drag image to upload
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG up to 5MB
+                  </p>
                 </div>
               )}
               <input
@@ -154,7 +183,9 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
               <input
                 type="text"
                 value={form.name}
-                onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, name: e.target.value }))
+                }
                 required
                 className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 placeholder="e.g., Chicken Sandwich"
@@ -176,56 +207,74 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
-                <label className="text-sm font-medium">Original Price (Dhs)</label>
+                <label className="text-sm font-medium">Original Price (MAD)</label>
                 <div className="relative">
                   <input
                     type="number"
-                    step="0.01"
+                    step="0.5"
                     min="0"
                     value={form.originalPrice}
                     onChange={(e) =>
-                      setForm((prev) => ({ ...prev, originalPrice: parseFloat(e.target.value) }))
+                      setForm((prev) => ({
+                        ...prev,
+                        originalPrice: parseFloat(e.target.value) || 0,
+                      }))
                     }
                     required
                     className="w-full rounded-md border bg-background pl-8 pr-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     placeholder="0.00"
                   />
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    د.إ
+                    د.م
                   </span>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  Discounted Price (Dhs)
-                  {form.originalPrice > 0 && (
-                    <span className="ml-2 text-xs text-muted-foreground">
-                      ({Math.round((1 - form.price / form.originalPrice) * 100)}% off)
+                <label className="text-sm font-medium">Discount</label>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      value={formatCurrency(calculatedPrice)}
+                      readOnly
+                      className="w-full rounded-md border bg-muted px-3 py-2 text-muted-foreground"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-muted-foreground">
+                      ({form.discountPercentage}% off)
                     </span>
-                  )}
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={form.price}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, price: parseFloat(e.target.value) }))
-                    }
-                    required
-                    className="w-full rounded-md border bg-background pl-8 pr-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                    placeholder="0.00"
-                  />
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
-                    د.إ
-                  </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between rounded-md border bg-background p-2">
+                  <button
+                    type="button"
+                    onClick={() => handleDiscountChange(false)}
+                    disabled={form.discountPercentage <= 50}
+                    className="rounded-md p-1.5 text-foreground hover:bg-secondary disabled:text-muted-foreground disabled:hover:bg-transparent"
+                    aria-label="Decrease discount"
+                  >
+                    <MinusCircle className="h-5 w-5" />
+                  </button>
+                  <div className="flex flex-col items-center px-2">
+                    <span className="text-lg font-semibold text-primary">
+                      {form.discountPercentage}%
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Discount
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleDiscountChange(true)}
+                    disabled={form.discountPercentage >= 70}
+                    className="rounded-md p-1.5 text-foreground hover:bg-secondary disabled:text-muted-foreground disabled:hover:bg-transparent"
+                    aria-label="Increase discount"
+                  >
+                    <PlusCircle className="h-5 w-5" />
+                  </button>
                 </div>
               </div>
-            </div>
 
-            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Quantity</label>
                 <input
@@ -235,12 +284,11 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                   onChange={(e) =>
                     setForm((prev) => ({
                       ...prev,
-                      quantity: parseInt(e.target.value, 10),
+                      quantity: parseInt(e.target.value) || 0,
                     }))
                   }
                   required
                   className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                  placeholder="Available quantity"
                 />
               </div>
 
@@ -252,7 +300,6 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                   onChange={(e) =>
                     setForm((prev) => ({ ...prev, expiryDate: e.target.value }))
                   }
-                  min={new Date().toISOString().split('T')[0]}
                   required
                   className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
@@ -270,16 +317,15 @@ const FoodItemModal = ({ foodItem, onClose, onSuccess }: FoodItemModalProps) => 
                 type="button"
                 onClick={onClose}
                 className="rounded-md px-4 py-2 text-sm font-medium hover:bg-secondary"
-                disabled={isSubmitting}
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                 disabled={isSubmitting}
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? 'Saving...' : foodItem ? 'Save Changes' : 'Create Item'}
+                {isSubmitting ? 'Saving...' : foodItem ? 'Update' : 'Create'}
               </button>
             </div>
           </form>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { api, Order } from '../services/api';
 import { formatCurrency, formatDateTime } from '../utils/formatters';
 import { useAuth } from '../context/AuthContext';
@@ -28,6 +29,7 @@ const paymentStatusColors = {
 };
 
 const OrdersPage = () => {
+  const { t } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState<string>('');
   const [pickupOrder, setPickupOrder] = useState<string | null>(null);
@@ -222,14 +224,14 @@ const OrdersPage = () => {
     return (
       <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${orderStatusColors[status]}`}>
         <StatusIcon className="h-3 w-3" />
-        {status.replace('_', ' ')}
+        {t(`orders.status.${status.toLowerCase()}`)}
       </span>
     );
   };
 
   const renderPaymentStatus = (status: Order['paymentStatus']) => (
     <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${paymentStatusColors[status]}`}>
-      {status}
+      {t(`orders.payment.${status.toLowerCase()}`)}
     </span>
   );
 
@@ -240,7 +242,7 @@ const OrdersPage = () => {
           onClick={() => updateOrderStatus.mutate({ orderId: order.id, status: 'CONFIRMED' })}
           className="rounded bg-blue-500 px-2 py-1 text-xs font-medium text-white hover:bg-blue-600"
         >
-          Confirm
+          {t('orders.actions.confirm')}
         </button>
       )}
       {order.status === 'CONFIRMED' && (
@@ -248,7 +250,7 @@ const OrdersPage = () => {
           onClick={() => updateOrderStatus.mutate({ orderId: order.id, status: 'PICKED_UP' })}
           className="rounded bg-green-500 px-2 py-1 text-xs font-medium text-white hover:bg-green-600"
         >
-          Mark as Picked Up
+          {t('orders.actions.pickup')}
         </button>
       )}
       {order.status === 'PENDING' && (
@@ -256,7 +258,7 @@ const OrdersPage = () => {
           onClick={() => updateOrderStatus.mutate({ orderId: order.id, status: 'CANCELLED' })}
           className="rounded bg-red-500 px-2 py-1 text-xs font-medium text-white hover:bg-red-600"
         >
-          Cancel
+          {t('orders.actions.cancel')}
         </button>
       )}
       {order.paymentStatus === 'PENDING' && (
@@ -264,7 +266,7 @@ const OrdersPage = () => {
           onClick={() => updatePaymentStatus.mutate({ orderId: order.id })}
           className="rounded bg-green-500 px-2 py-1 text-xs font-medium text-white hover:bg-green-600"
         >
-          Mark as Paid
+          {t('orders.actions.markPaid')}
         </button>
       )}
     </div>
@@ -273,7 +275,7 @@ const OrdersPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold sm:text-3xl">Orders</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('orders.title')}</h1>
         
         {/* Mobile Filter Button */}
         <button
@@ -282,7 +284,7 @@ const OrdersPage = () => {
         >
           <span className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
-            {selectedStatus || 'All Status'}
+            {selectedStatus ? t(`orders.status.${selectedStatus.toLowerCase()}`) : t('orders.allStatus')}
           </span>
           <ChevronRight className={`h-4 w-4 transition-transform ${isFilterOpen ? 'rotate-90' : ''}`} />
         </button>
@@ -310,7 +312,7 @@ const OrdersPage = () => {
                         : 'hover:bg-accent'
                     }`}
                   >
-                    {status || 'All Status'}
+                    {status ? t(`orders.status.${status.toLowerCase()}`) : t('orders.allStatus')}
                   </button>
                 ))}
               </div>
@@ -324,11 +326,11 @@ const OrdersPage = () => {
           onChange={(e) => setSelectedStatus(e.target.value)}
           className="hidden rounded-md border bg-background px-3 py-2 text-sm sm:block"
         >
-          <option value="">All Status</option>
-          <option value="PENDING">Pending</option>
-          <option value="CONFIRMED">Confirmed</option>
-          <option value="PICKED_UP">Picked Up</option>
-          <option value="CANCELLED">Cancelled</option>
+          <option value="">{t('orders.allStatus')}</option>
+          <option value="PENDING">{t('orders.status.pending')}</option>
+          <option value="CONFIRMED">{t('orders.status.confirmed')}</option>
+          <option value="PICKED_UP">{t('orders.status.picked_up')}</option>
+          <option value="CANCELLED">{t('orders.status.cancelled')}</option>
         </select>
       </div>
 
@@ -366,7 +368,7 @@ const OrdersPage = () => {
                   ))}
                 </div>
                 <div className="flex items-center justify-between font-medium">
-                  <span>Total:</span>
+                  <span>{t('orders.total')}:</span>
                   <span>{formatCurrency(order.totalAmount)}</span>
                 </div>
               </div>
@@ -383,25 +385,25 @@ const OrdersPage = () => {
             <thead>
               <tr className="border-b">
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Order ID
+                  {t('orders.orderId')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Date
+                  {t('orders.date')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Items
+                  {t('orders.items')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Total
+                  {t('orders.total')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Status
+                  {t('orders.status.title')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Payment
+                  {t('orders.payment.title')}
                 </th>
                 <th className="px-6 py-4 text-left text-sm font-medium text-muted-foreground">
-                  Actions
+                  {t('orders.actions.title')}
                 </th>
               </tr>
             </thead>
@@ -454,17 +456,17 @@ const OrdersPage = () => {
             className="inline-flex items-center gap-1 rounded px-3 py-1.5 text-sm disabled:opacity-50"
           >
             <ChevronLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Previous</span>
+            <span className="hidden sm:inline">{t('common.previous')}</span>
           </button>
           <span className="text-sm text-muted-foreground">
-            {currentPage} of {Math.ceil(data.total / 10)}
+            {t('orders.page', { current: currentPage, total: Math.ceil(data.total / 10) })}
           </span>
           <button
             onClick={() => setCurrentPage((p) => Math.min(Math.ceil(data.total / 10), p + 1))}
             disabled={currentPage === Math.ceil(data.total / 10)}
             className="inline-flex items-center gap-1 rounded px-3 py-1.5 text-sm disabled:opacity-50"
           >
-            <span className="hidden sm:inline">Next</span>
+            <span className="hidden sm:inline">{t('common.next')}</span>
             <ChevronRight className="h-4 w-4" />
           </button>
         </div>

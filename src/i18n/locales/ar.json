@@ -1,0 +1,80 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "submit": "إرسال",
+    "currency": "درهم"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "passwordPlaceholder": "أدخل كلمة المرور الخاصة بك",
+    "signingIn": "جاري تسجيل الدخول...",
+    "signIn": "تسجيل الدخول",
+    "welcomeBack": "مرحباً بك في سوفي",
+    "welcomeMessage": "سجل الدخول لإدارة منتجاتك الغذائية وتتبع الطلبات والحد من هدر الطعام",
+    "merchantAccount": "حساب التاجر الخاص بك"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحباً",
+    "overview": "نظرة عامة على نشاطك التجاري",
+    "totalOrders": "إجمالي الطلبات",
+    "revenue": "الإيرادات",
+    "itemsSaved": "المنتجات المحفوظة",
+    "activeItems": "المنتجات النشطة",
+    "dailyOrders": "الطلبات اليومية",
+    "weekOverview": "نظرة عامة على الأسبوع",
+    "hourlyOrders": "الطلبات بالساعة",
+    "todayOrders": "طلبات اليوم"
+  },
+  "foodItems": {
+    "title": "المنتجات الغذائية",
+    "add": "إضافة منتج",
+    "edit": "تعديل المنتج",
+    "name": "الاسم",
+    "description": "الوصف",
+    "originalPrice": "السعر الأصلي",
+    "discountedPrice": "السعر المخفض",
+    "price": "السعر",
+    "discount": "التخفيض",
+    "quantity": "الكمية",
+    "expiryDate": "تاريخ الانتهاء",
+    "expires": "تنتهي",
+    "left": "متبقي",
+    "image": "الصورة",
+    "uploadImage": "رفع صورة",
+    "changeImage": "تغيير الصورة",
+    "off": "خصم"
+  },
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "foodItems": "المنتجات",
+    "orders": "الطلبات",
+    "profile": "الملف الشخصي",
+    "logout": "تسجيل الخروج"
+  },
+  "orders": {
+    "title": "الطلبات",
+    "orderDetails": "تفاصيل الطلب",
+    "orderId": "رقم الطلب",
+    "items": "المنتجات",
+    "total": "الإجمالي",
+    "customerName": "اسم العميل",
+    "status.title": "الحالة",
+    "payment.title": "طريقة الدفع",
+    "actions.title": "الإجراءات",
+    "status": "الحالة",
+    "date": "التاريخ",
+    "totalAmount": "المبلغ الإجمالي",
+    "viewDetails": "عرض التفاصيل"
+  }
+}

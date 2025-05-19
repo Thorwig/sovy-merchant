@@ -1,0 +1,79 @@
+{
+  "common": {
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "create": "Créer",
+    "update": "Mettre à jour",
+    "submit": "Soumettre",
+    "currency": "MAD"
+  },
+  "auth": {
+    "login": "Connexion",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "passwordPlaceholder": "Entrez votre mot de passe",
+    "signingIn": "Connexion en cours...",
+    "signIn": "Se connecter",
+    "welcomeBack": "Bienvenue sur Sovy",
+    "welcomeMessage": "Connectez-vous pour gérer vos articles, suivre vos commandes et réduire le gaspillage alimentaire",
+    "merchantAccount": "votre compte marchand"
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "welcome": "Bienvenue",
+    "overview": "Voici un aperçu de votre activité",
+    "totalOrders": "Total des commandes",
+    "revenue": "Chiffre d'affaires",
+    "itemsSaved": "Articles sauvés",
+    "activeItems": "Articles actifs",
+    "dailyOrders": "Commandes quotidiennes",
+    "weekOverview": "Aperçu de la semaine",
+    "hourlyOrders": "Commandes par heure",
+    "todayOrders": "Commandes d'aujourd'hui"
+  },
+  "foodItems": {
+    "title": "Articles alimentaires",
+    "add": "Ajouter un article",
+    "edit": "Modifier l'article",
+    "name": "Nom",
+    "description": "Description",
+    "originalPrice": "Prix original",
+    "discountedPrice": "Prix réduit",
+    "price": "Prix",
+    "discount": "Réduction",
+    "quantity": "Quantité",
+    "expiryDate": "Date d'expiration",
+    "expires": "Expire",
+    "left": "restant",
+    "image": "Image",
+    "uploadImage": "Télécharger une image",
+    "changeImage": "Changer l'image",
+    "off": "de réduction"
+  },
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "foodItems": "Articles",
+    "orders": "Commandes",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "orders": {
+    "title": "Commandes",
+    "orderId": "ID de commande",
+    "items": "Articles",
+    "total": "Total",
+    "customerName": "Nom du client",
+    "status.title": "Statut",
+    "payment.title": "Méthode de paiement",
+    "actions.title": "Actions",
+    "date": "Date de commande",
+    "status": "Statut",
+    "totalAmount": "Montant total"
+  }
+  
+}

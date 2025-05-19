@@ -7,6 +7,7 @@ import DashboardPage from './pages/DashboardPage';
 import FoodItemsPage from './pages/FoodItemsPage';
 import OrdersPage from './pages/OrdersPage';
 import ProfilePage from './pages/ProfilePage';
+import './i18n';
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,6 @@ const App = () => {
       </AuthProvider>
     </QueryClientProvider>
   );
-}
+};
 
 export default App;

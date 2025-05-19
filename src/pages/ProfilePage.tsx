@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Building2, MapPin, Phone, Save, ShieldCheck, X } from 'lucide-react';
@@ -61,6 +62,7 @@ const LoadingSkeleton = () => (
 );
 
 const ProfilePage = () => {
+  const { t } = useTranslation();
   const { merchant, updateMerchantProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [form, setForm] = useState<ProfileFormData>({
@@ -100,7 +102,7 @@ const ProfilePage = () => {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message);
       } else {
-        setError(err instanceof Error ? err.message : 'Failed to update profile');
+        setError(err instanceof Error ? err.message : t('profile.updateError'));
       }
     } finally {
       setIsSubmitting(false);
@@ -110,14 +112,14 @@ const ProfilePage = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold sm:text-3xl">Business Profile</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('profile.title')}</h1>
         {!isEditing && (
           <button
             onClick={() => setIsEditing(true)}
             className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto"
           >
             <ShieldCheck className="h-4 w-4" />
-            Edit Profile
+            {t('profile.edit')}
           </button>
         )}
       </div>
@@ -125,22 +127,22 @@ const ProfilePage = () => {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <InfoCard
           icon={<Building2 className="h-4 w-4" />}
-          title="Business Name"
+          title={t('profile.businessName')}
           value={merchant.businessName}
         />
         <InfoCard
           icon={<Phone className="h-4 w-4" />}
-          title="Contact"
+          title={t('profile.contact')}
           value={merchant.phone}
         />
         <InfoCard
           icon={<MapPin className="h-4 w-4" />}
-          title="Location"
+          title={t('profile.location')}
           value={merchant.address}
         />
         <InfoCard
           icon={<MapPin className="h-4 w-4" />}
-          title="Area"
+          title={t('profile.area')}
           value={`${merchant.city}, ${merchant.postalCode}`}
         />
       </div>
@@ -148,9 +150,9 @@ const ProfilePage = () => {
       <div className="relative overflow-hidden rounded-lg border bg-card">
         <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-primary/10" />
         <div className="relative p-4">
-          <h3 className="mb-2 text-sm font-medium">About Business</h3>
+          <h3 className="mb-2 text-sm font-medium">{t('profile.about')}</h3>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {merchant.description || 'No description provided'}
+            {merchant.description || t('profile.noDescription')}
           </p>
         </div>
       </div>
@@ -172,7 +174,7 @@ const ProfilePage = () => {
                 className="w-full max-w-2xl rounded-lg border bg-card shadow-lg"
               >
                 <div className="flex items-center justify-between border-b p-4">
-                  <h2 className="text-lg font-semibold">Edit Profile</h2>
+                  <h2 className="text-lg font-semibold">{t('profile.editTitle')}</h2>
                   <button
                     onClick={() => setIsEditing(false)}
                     className="rounded-full p-2 hover:bg-secondary"
@@ -186,7 +188,7 @@ const ProfilePage = () => {
                     <div className="grid gap-4 sm:grid-cols-2">
                       {/* Business Info Section */}
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Business Name</label>
+                        <label className="text-sm font-medium">{t('profile.businessName')}</label>
                         <input
                           type="text"
                           value={form.businessName}
@@ -202,7 +204,7 @@ const ProfilePage = () => {
                       </div>
 
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Phone</label>
+                        <label className="text-sm font-medium">{t('profile.phone')}</label>
                         <input
                           type="tel"
                           value={form.phone}
@@ -213,12 +215,12 @@ const ProfilePage = () => {
                           required
                           className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                         />
-                        <p className="text-xs text-muted-foreground">Format: +1234567890</p>
+                        <p className="text-xs text-muted-foreground">{t('profile.phoneFormat')}</p>
                       </div>
                     </div>
 
                     <div className="space-y-2">
-                      <label className="text-sm font-medium">Description</label>
+                      <label className="text-sm font-medium">{t('profile.description')}</label>
                       <textarea
                         value={form.description}
                         onChange={(e) =>
@@ -228,19 +230,22 @@ const ProfilePage = () => {
                           }))
                         }
                         rows={3}
-                        placeholder="Tell customers about your business..."
+                        placeholder={t('profile.descriptionPlaceholder')}
                         className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                       />
                     </div>
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Address</label>
+                        <label className="text-sm font-medium">{t('profile.address')}</label>
                         <input
                           type="text"
                           value={form.address}
                           onChange={(e) =>
-                            setForm((prev) => ({ ...prev, address: e.target.value }))
+                            setForm((prev) => ({
+                              ...prev,
+                              address: e.target.value,
+                            }))
                           }
                           required
                           className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
@@ -249,7 +254,7 @@ const ProfilePage = () => {
 
                       <div className="grid gap-4 sm:grid-cols-2">
                         <div className="space-y-2">
-                          <label className="text-sm font-medium">City</label>
+                          <label className="text-sm font-medium">{t('profile.city')}</label>
                           <input
                             type="text"
                             value={form.city}
@@ -262,7 +267,7 @@ const ProfilePage = () => {
                         </div>
 
                         <div className="space-y-2">
-                          <label className="text-sm font-medium">Postal Code</label>
+                          <label className="text-sm font-medium">{t('profile.postalCode')}</label>
                           <input
                             type="text"
                             value={form.postalCode}
@@ -282,7 +287,7 @@ const ProfilePage = () => {
                     {/* Coordinates Section */}
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Latitude</label>
+                        <label className="text-sm font-medium">{t('profile.latitude')}</label>
                         <input
                           type="number"
                           step="any"
@@ -296,10 +301,10 @@ const ProfilePage = () => {
                           required
                           className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                         />
-                        <p className="text-xs text-muted-foreground">Range: -90 to 90</p>
+                        <p className="text-xs text-muted-foreground">{t('profile.latitudeRange')}</p>
                       </div>
                       <div className="space-y-2">
-                        <label className="text-sm font-medium">Longitude</label>
+                        <label className="text-sm font-medium">{t('profile.longitude')}</label>
                         <input
                           type="number"
                           step="any"
@@ -313,7 +318,7 @@ const ProfilePage = () => {
                           required
                           className="w-full rounded-md border bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                         />
-                        <p className="text-xs text-muted-foreground">Range: -180 to 180</p>
+                        <p className="text-xs text-muted-foreground">{t('profile.longitudeRange')}</p>
                       </div>
                     </div>
                   </div>
@@ -328,7 +333,7 @@ const ProfilePage = () => {
 
                     {success && (
                       <div className="mb-4 rounded-md bg-green-100 p-3 text-sm text-green-800">
-                        Profile updated successfully!
+                        {t('profile.updateSuccess')}
                       </div>
                     )}
 
@@ -339,7 +344,7 @@ const ProfilePage = () => {
                         className="rounded-md px-4 py-2 text-sm font-medium hover:bg-secondary"
                         disabled={isSubmitting}
                       >
-                        Cancel
+                        {t('common.cancel')}
                       </button>
                       <button
                         type="submit"
@@ -349,12 +354,12 @@ const ProfilePage = () => {
                         {isSubmitting ? (
                           <>
                             <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                            Saving...
+                            {t('profile.saving')}
                           </>
                         ) : (
                           <>
                             <Save className="h-4 w-4" />
-                            Save Changes
+                            {t('profile.saveChanges')}
                           </>
                         )}
                       </button>

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { api, FoodItem } from '../services/api';
 import { formatCurrency, formatDate } from '../utils/formatters';
 import FoodItemModal from '../components/food/FoodItemModal';
@@ -36,6 +37,7 @@ const LoadingSkeleton = () => (
 );
 
 const FoodItemsPage = () => {
+  const { t } = useTranslation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<FoodItem | undefined>();
   const queryClient = useQueryClient();
@@ -49,13 +51,13 @@ const FoodItemsPage = () => {
   });
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
+    if (window.confirm(t('foodItems.deleteConfirm'))) {
       try {
         await api.deleteFoodItem(id);
         await queryClient.invalidateQueries({ queryKey: ['merchant-food-items'] });
       } catch (error: any) {
         console.error('Failed to delete food item:', error);
-        window.alert(error.response?.data?.message || 'Failed to delete food item. Please try again.');
+        window.alert(error.response?.data?.message || t('foodItems.deleteError'));
       }
     }
   };
@@ -87,29 +89,29 @@ const FoodItemsPage = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold sm:text-3xl">Food Items</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('foodItems.title')}</h1>
         <button
           onClick={() => setIsModalOpen(true)}
           className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 sm:w-auto"
         >
           <Plus className="h-4 w-4" />
-          Add Food Item
+          {t('foodItems.add')}
         </button>
       </div>
 
       {noItems ? (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-lg border-2 border-dashed">
           <div className="text-center">
-            <h3 className="mt-2 text-sm font-semibold">No food items</h3>
+            <h3 className="mt-2 text-sm font-semibold">{t('foodItems.noItems')}</h3>
             <p className="mt-1 text-sm text-muted-foreground">
-              Get started by creating a new food item
+              {t('foodItems.noItemsMessage')}
             </p>
             <button
               onClick={() => setIsModalOpen(true)}
               className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
             >
               <Plus className="h-4 w-4" />
-              Add Food Item
+              {t('foodItems.add')}
             </button>
           </div>
         </div>
@@ -147,33 +149,33 @@ const FoodItemsPage = () => {
                 </p>
                 <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
                   <div className="rounded-md bg-secondary/50 p-2">
-                    <div className="text-xs text-muted-foreground">Price</div>
+                    <div className="text-xs text-muted-foreground">{t('foodItems.price')}</div>
                     <div className="font-medium text-primary">
                       {formatCurrency(item.price)}
                     </div>
                   </div>
                   <div className="rounded-md bg-secondary/50 p-2">
-                    <div className="text-xs text-muted-foreground">Quantity</div>
+                    <div className="text-xs text-muted-foreground">{t('foodItems.quantity')}</div>
                     <div className="font-medium">
-                      {item.quantity} left
+                      {item.quantity} {t('foodItems.left')}
                     </div>
                   </div>
                 </div>
                 <div className="mt-3 text-sm text-muted-foreground">
-                  Expires: {formatDate(item.expiryDate)}
+                  {t('foodItems.expires')}: {formatDate(item.expiryDate)}
                 </div>
                 <div className="mt-4 flex gap-2">
                   <button
                     onClick={() => handleEdit(item)}
                     className="flex-1 rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground hover:bg-secondary/90 active:bg-secondary/80"
                   >
-                    Edit
+                    {t('common.edit')}
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
                     className="flex-1 rounded-md bg-destructive/10 px-3 py-1.5 text-sm font-medium text-destructive hover:bg-destructive/20 active:bg-destructive/30"
                   >
-                    Delete
+                    {t('common.delete')}
                   </button>
                 </div>
               </div>

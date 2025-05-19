@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { EyeIcon, EyeOffIcon, Loader2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../components/layout/LanguageSwitcher';
 import logo from '../assets/logo.png';
 
 const LoginPage = () => {
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,6 +16,12 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  // Add RTL class to body when using RTL language
+  useEffect(() => {
+    document.body.classList.toggle('rtl', document.documentElement.dir === 'rtl');
+    return () => document.body.classList.remove('rtl');
+  }, [i18n.language]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -43,6 +52,11 @@ const LoginPage = () => {
           {/* Abstract pattern background */}
           <div className="absolute inset-0 bg-grid-primary/[0.05]" />
           
+          {/* Language switcher for desktop */}
+          <div className="absolute top-6 right-6">
+            <LanguageSwitcher variant="minimal" />
+          </div>
+          
           {/* Welcome content */}
           <div className="relative z-10 max-w-2xl space-y-8 text-center">
             <motion.div
@@ -63,10 +77,10 @@ const LoginPage = () => {
               className="space-y-6"
             >
               <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-                Welcome to Sovy
+                {t('auth.welcomeBack')}
               </h1>
               <p className="mx-auto max-w-lg text-lg text-muted-foreground">
-                Sign in to manage your food items, track orders, and make a positive impact by reducing food waste.
+                {t('auth.welcomeMessage')}
               </p>
             </motion.div>
           </div>
@@ -75,8 +89,13 @@ const LoginPage = () => {
 
       {/* Right panel with login form */}
       <div className="flex w-full items-center justify-center p-4 sm:p-8 lg:w-1/2 lg:p-12">
+        {/* Language switcher for mobile */}
+        <div className="absolute top-4 right-4 lg:hidden">
+          <LanguageSwitcher variant="minimal" />
+        </div>
+        
         <div className="w-full max-w-lg space-y-8">
-          {/* Mobile logo */}
+          {/* Mobile logo and welcome message */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -89,10 +108,10 @@ const LoginPage = () => {
               className="mx-auto h-20 w-auto sm:h-24"
             />
             <h1 className="mt-6 text-2xl font-bold tracking-tight sm:text-3xl">
-              Welcome to Sovy
+              {t('auth.welcomeBack')}
             </h1>
             <p className="mt-2 text-muted-foreground">
-              Sign in to your merchant account
+              {t('auth.merchantAccount')}
             </p>
           </motion.div>
 
@@ -111,7 +130,7 @@ const LoginPage = () => {
                   htmlFor="email"
                   className="block text-base font-medium text-foreground"
                 >
-                  Email address
+                  {t('auth.email')}
                 </label>
                 <div className="mt-2">
                   <input
@@ -125,6 +144,7 @@ const LoginPage = () => {
                     disabled={isLoading}
                     className="block w-full rounded-lg border-0 bg-background px-4 py-3 text-foreground shadow-sm ring-1 ring-inset ring-input placeholder:text-muted-foreground focus:ring-2 focus:ring-primary sm:text-base sm:leading-6 disabled:opacity-50"
                     placeholder="your@email.com"
+                    dir="ltr" // Force LTR for email input
                   />
                 </div>
               </div>
@@ -135,7 +155,7 @@ const LoginPage = () => {
                     htmlFor="password"
                     className="block text-base font-medium text-foreground"
                   >
-                    Password
+                    {t('auth.password')}
                   </label>
                   <button
                     type="button"
@@ -145,7 +165,7 @@ const LoginPage = () => {
                       alert('Forgot password functionality will be implemented soon.');
                     }}
                   >
-                    Forgot password?
+                    {t('auth.forgotPassword')}
                   </button>
                 </div>
                 <div className="relative mt-2">
@@ -159,7 +179,8 @@ const LoginPage = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={isLoading}
                     className="block w-full rounded-lg border-0 bg-background px-4 py-3 text-foreground shadow-sm ring-1 ring-inset ring-input placeholder:text-muted-foreground focus:ring-2 focus:ring-primary sm:text-base sm:leading-6 disabled:opacity-50"
-                    placeholder="Enter your password"
+                    placeholder={t('auth.passwordPlaceholder')}
+                    dir="ltr" // Force LTR for password input
                   />
                   <button
                     type="button"
@@ -196,10 +217,10 @@ const LoginPage = () => {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Signing in...
+                    {t('auth.signingIn')}
                   </>
                 ) : (
-                  'Sign in'
+                  t('auth.signIn')
                 )}
               </button>
             </div>

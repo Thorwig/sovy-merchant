@@ -2,8 +2,10 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, Package, ShoppingBag, User, LogOut, Menu, X } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Layout = () => {
+  const { t } = useTranslation();
   const { merchant, logout } = useAuth();
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -14,10 +16,10 @@ const Layout = () => {
   };
 
   const navItems = [
-    { to: '/', icon: LayoutDashboard, label: 'Dashboard' },
-    { to: '/food-items', icon: Package, label: 'Food Items' },
-    { to: '/orders', icon: ShoppingBag, label: 'Orders' },
-    { to: '/profile', icon: User, label: 'Profile' },
+    { to: '/', icon: LayoutDashboard, label: t('nav.dashboard') },
+    { to: '/food-items', icon: Package, label: t('nav.foodItems') },
+    { to: '/orders', icon: ShoppingBag, label: t('nav.orders') },
+    { to: '/profile', icon: User, label: t('nav.profile') },
   ];
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
@@ -33,7 +35,7 @@ const Layout = () => {
           {isMobileMenuOpen ? <X /> : <Menu />}
         </button>
         <h1 className="text-lg font-semibold">
-          {merchant?.businessName || 'Merchant Dashboard'}
+          {merchant?.businessName || t('nav.merchantDashboard')}
         </h1>
       </div>
 
@@ -41,7 +43,7 @@ const Layout = () => {
       <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r bg-card lg:block">
         <div className="flex h-16 items-center border-b px-6">
           <h1 className="text-lg font-semibold">
-            {merchant?.businessName || 'Merchant Dashboard'}
+            {merchant?.businessName || t('nav.merchantDashboard')}
           </h1>
         </div>
         <nav className="space-y-1 p-4">{renderNavItems()}</nav>
@@ -52,7 +54,7 @@ const Layout = () => {
         <div className="fixed inset-0 z-50 bg-black bg-opacity-50 lg:hidden" onClick={closeMobileMenu}>
           <aside className="fixed left-0 top-0 h-screen w-64 border-r bg-card">
             <div className="flex h-16 items-center justify-between border-b px-6">
-              <h1 className="text-lg font-semibold">Menu</h1>
+              <h1 className="text-lg font-semibold">{t('nav.menu')}</h1>
               <button onClick={closeMobileMenu}>
                 <X className="h-6 w-6" />
               </button>
@@ -96,7 +98,7 @@ const Layout = () => {
           className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-destructive hover:text-destructive-foreground"
         >
           <LogOut className="h-4 w-4" />
-          Logout
+          {t('nav.logout')}
         </button>
       </>
     );
